@@ -1,7 +1,7 @@
-﻿#TP-Link Archer C5 Authenticated RCE Through Malicious Configuration File Upload
+﻿# TP-Link Archer C5 Authenticated RCE Through Malicious Configuration File Upload
 
 
-##Description
+## Description
 
 
 An authenticated remote code execution (RCE) vulnerability exists in all published firmware versions for the TP-Link Archer C5 router. By uploading a maliciously crafted configuration file, an attacker can inject OS commands that are run with root privileges.
@@ -10,7 +10,7 @@ An authenticated remote code execution (RCE) vulnerability exists in all publish
 The Archer C5 router allows administrative users to save current configuration parameters to a file, and restore parameters from a file. These parameters seem to be properly sanitized when a user tries to set them within the web GUI. However, they are not properly sanitized when set from a configuration file. In particular, we injected OS commands via the “wan_dyn_hostname 1 <name>” parameter within the uploaded configuration file. Other parameters may also be vulnerable.
 
 
-##Methodology
+## Methodology
 
 
 A valid configuration file can be downloaded from the “Backup & Restore” menu in the router’s web GUI. The following HTTP request will download a backup of the router’s current configuration:
@@ -73,7 +73,7 @@ So at this point we can run a 63 character BusyBox command, on a read-only files
 One thing that we can do, however, is start another instance of httpd at this point in execution. This instance of httpd will also run this system call, which leaves us in a loop that will continuously spawn more instances of httpd, but allow the parent httpd processes to continue executing and ultimately restore network connectivity. To avoid running out of memory, we terminate this loop by checking to see if our exploit has been downloaded.
 
 
-##Proof of Concept
+## Proof of Concept
 
 
 Working within the above limitations, we came up with the following shell script, which grabs a file from the internet with wget and pipes it straight to /bin/sh.
@@ -101,7 +101,7 @@ And finally, trigger the exploit by setting the hostname to:
 This script stored in the router’s NVRAM will be run on each boot, and the router will appear to continue working normally. The end result is that the router will reach out to the internet, download a file, and run it as root every time it boots.
 
 
-##Criticality Assessment
+## Criticality Assessment
 
 
 As shown, this vulnerability can be exploited to cause the router to reach out over the internet, grab a payload, and run it with root privileges. Therefore there is high impact on confidentiality, integrity, and availability of the device.
@@ -116,12 +116,12 @@ This attack is moderately visible, as it requires at least one reboot of the dev
 This vulnerability can be exploited by anyone with access to the web admin account. Thus, with the router’s default configuration this can be exploited via LAN / WLAN connectivity with the default admin credentials of “admin:admin”. This vulnerability can be exploited remotely across the internet, if remote management is enabled. Remote management is disabled by default.
 
 
-##Suggested Fixes/Solutions
+## Suggested Fixes/Solutions
 * Run the values restored from a configuration backup through the same functions that check the validity of user input from the web UI
 * Force the user to set an admin password during router setup
 
 
-##Comments
+## Comments
 
 
 This vulnerability is relatively simple, leading us to believe that it has likely been found and exploited before. The defense against this attack is also incredibly simple: do not use the default administrative password. A strong password to the web administrative account will prevent this attack. Because it is so easy to exploit, and because it is so easy to mitigate, we believe that full disclosure is in the public’s best interest.
@@ -130,7 +130,7 @@ This vulnerability is relatively simple, leading us to believe that it has likel
 For our PoC, we injected via the “wan_dyn_hostname” parameter. However, the config file contains 1190 parameters in total, many of which may be injectable.
 
 
-##Acknowledgments
+## Acknowledgments
 * Matteo Croce for discovering the hard-coded key value of 478DA50BF9E3D2CF (http://teknoraver.net/software/hacks/tplink/)
 * TP-Link, for providing a toolchain with their GPL-compliance package that allowed us to build GDB for their platform
 
