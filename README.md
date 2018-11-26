@@ -142,7 +142,7 @@ This vulnerability can be exploited by anyone with access to the web admin accou
 ## Comments
 
 
-This vulnerability is relatively simple, leading us to believe that it has likely been found and exploited before. The defense against this attack is also incredibly simple: do not use the default administrative password. A strong password to the web administrative account will prevent this attack. Because it is so easy to exploit, and because it is so easy to mitigate, we believe that full disclosure is in the public’s best interest.
+This vulnerability is relatively simple, leading us to believe that it has likely been found and exploited before. The defense against this attack is also incredibly simple: do not use the default administrative password. A strong password to the web administrative account will prevent this attack. Because it is so easy to exploit, and also so easy to mitigate, we believe that full disclosure is in the public’s best interest.
 
 
 For our PoC, we injected via the “wan_dyn_hostname” parameter. However, the config file contains 1190 parameters in total, many of which may be injectable.
